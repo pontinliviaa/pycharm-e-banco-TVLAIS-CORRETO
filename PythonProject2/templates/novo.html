@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash{{category}}">{{message}}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+    <form action="/criar" method="post">
+      <label for="titulo">Título:</label>
+      <input type="text" id="titulo" name="nome" required>
+
+      <label for="autor">Autor:</label>
+      <input type="text" id="autor" name="autor" required>
+
+      <label for="ano">Ano de Publicação</label>
+      <input type="number" id="ano" name="ano" required>
+
+      <div class="style">
+        <button type="submit">Salvar</button>
+      </div>
+
+  </form>
+
+</body>
+</html>
