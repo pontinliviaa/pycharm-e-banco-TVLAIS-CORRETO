@@ -1,7 +1,9 @@
 
-from flask import Flask, render_template, redirect, request, flash, url_for, session
+from flask import Flask, render_template, redirect, request, flash, url_for, session, send_file
 import fdb
+import re
 from flask_bcrypt import Bcrypt
+
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -73,9 +75,11 @@ def editar(id):
         cursor.execute("""SELECT ID_LIVRO, NOME, AUTOR, ANO_PUB
             FROM LIVRO WHERE ID_LIVRO = ?""", (id,))
         livro = cursor.fetchone()
+
         if not livro:
             flash('Livro não encontrado.')
             return redirect(url_for('index'))
+
         if request.method == 'POST':
             nome = request.form['nome']
             autor = request.form['autor']
@@ -88,10 +92,12 @@ def editar(id):
             return redirect(url_for('index'))
 
         return render_template('editar.html', livro = livro)
+
     except Exception as e:
         con.rollback()
         flash(f'Ocorreu um erro ->{e}')
         return redirect(url_for('index'))
+
     finally:
         cursor.close()
 
@@ -104,10 +110,12 @@ def deletar(id):
         con.commit()
         flash("Livro deletado com sucesso!")
         return redirect(url_for('index'))
+
     except Exception as e:
         con.rollback()
         flash(f'Ocorreu um erro -> {e}')
         return redirect(url_for('index'))
+
     finally:
         cursor.close()
 
@@ -293,15 +301,15 @@ def login():
             tentativas = usuario[4]
             bloqueado = usuario[5]
 
-            # Verifica se o usuário está bloqueado
+            # verifica se o usuário está bloqueado
             if bloqueado == 1:
                 flash('Usuário bloqueado.')
                 return render_template('login.html')
 
-            # Verifica a senha
+            # verifica a senha
             if bcrypt.check_password_hash(senha_banco, senha):
 
-                # Zera as tentativas quando acertar
+                # zera as tentativas quando acertar
                 cursor.execute("""UPDATE USUARIO
                                   SET TENTATIVAS = 0
                                   WHERE ID_USUARIO = ?""",
