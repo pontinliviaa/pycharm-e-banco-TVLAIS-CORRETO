@@ -15,7 +15,11 @@
             {% endif %}
         {% endwith %}
 
-    <form action="/criar" method="post">
+    <form action="/criar" method="post" enctype="multipart/form-data">
+
+        <label for="titulo">Capa do livro:</label>
+      <input type="file" id="imagem" name="imagem"  accept=".jpg">
+
       <label for="titulo">Título:</label>
       <input type="text" id="titulo" name="nome" required>
 
